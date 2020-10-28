@@ -1,15 +1,21 @@
 #include "pch.h"
 #include "KBWindow.h"
+#include "KeyBeep.h"
 
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-KBWindow::KBWindow(HINSTANCE hInstance)
-	: mInstance(hInstance)
+KBWindow::KBWindow(KeyBeep& owner)
+	: mOwner(owner), mInstance(owner.GetHInstance())
 {
 	LoadString(IDS_APP_TITLE, mTitle);
 	LoadString(IDC_KEYBEEP, mWindowClass);
 
 	RegisterClass();
+}
+
+KBWindow::~KBWindow()
+{
+    ::DestroyWindow(mWnd);
 }
 
 bool KBWindow::InitInstance(int nCmdShow)
@@ -27,6 +33,10 @@ bool KBWindow::InitInstance(int nCmdShow)
     ::UpdateWindow(mWnd);
 
     return true;
+}
+
+void KBWindow::Render()
+{
 }
 
 void KBWindow::RegisterClass()
@@ -60,13 +70,16 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 {
     switch (message)
     {
+    case WM_KEYDOWN:
+        break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        BeginPaint(hWnd, &ps);
+        HDC hdc = BeginPaint(hWnd, &ps);
+        TextOutW(hdc, 100, 100, L"Hello, world!", 13);
         EndPaint(hWnd, &ps);
+        break;
     }
-    break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

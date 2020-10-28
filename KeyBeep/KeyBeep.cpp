@@ -1,10 +1,12 @@
 ﻿#include "pch.h"
 #include "KeyBeep.h"
+#include "KBHook.h"
 
 constexpr size_t MAX_LOADSTRING = 100;
 
 KeyBeep::KeyBeep(HINSTANCE hInstance)
-    : mWindow(hInstance)
+    : mInstance(hInstance),
+    mHook(KBHook::Get(*this)), mWindow(*this)
 {
 }
 

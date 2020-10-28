@@ -1,16 +1,23 @@
 #pragma once
 
+class KeyBeep;
+
 class KBWindow
 {
 public:
-	KBWindow(HINSTANCE hInstance);
+	KBWindow(KeyBeep& owner);
+	~KBWindow();
+
 	bool InitInstance(int nCmdShow);
 
-	void SetTitle(const std::wstring& str) { mTitle = str; }
-	const std::wstring& GetTitle() const noexcept { return mTitle; }
+	inline void SetTitle(const std::wstring& str) { mTitle = str; }
+	inline const std::wstring& GetTitle() const noexcept { return mTitle; }
 
 protected:
+	void Render();
 	void RegisterClass();
+
+	KeyBeep& mOwner;
 
 	HINSTANCE mInstance = nullptr;
 	HWND mWnd = nullptr;

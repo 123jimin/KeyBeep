@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="KBHook.h" />
     <ClInclude Include="KBWindow.h" />
     <ClInclude Include="KeyBeep.h" />
     <ClInclude Include="pch.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="KBHook.cpp" />
     <ClCompile Include="KBWindow.cpp" />
     <ClCompile Include="KeyBeep.cpp" />
     <ClCompile Include="pch.cpp">

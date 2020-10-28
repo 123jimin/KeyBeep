@@ -33,6 +33,9 @@
     <ClInclude Include="KBHook.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Beeper.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyBeep.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="KBHook.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Beeper.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

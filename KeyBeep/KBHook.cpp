@@ -14,7 +14,7 @@ KBHook& KBHook::Get(KeyBeep& owner)
 		hook->Start();
 	});
 
-	assert(INSTANCE != nullptr);
+	__assume(INSTANCE != nullptr);
 
 	return *(INSTANCE.get());
 }
@@ -50,29 +50,30 @@ void KBHook::Main()
 	}
 }
 
-void KBHook::OnKeyEvent(const KBDLLHOOKSTRUCT* kbd_ll)
+void KBHook::OnKeyEvent(const KBDLLHOOKSTRUCT& kbd_ll)
 {
-	assert(kbd_ll != nullptr);
+	if (kbd_ll.flags & LLKHF_UP) return;
 
 	mOwner.SetLastKeyPress(KeyBeep::LastKeyPress{std::chrono::steady_clock::now()});
-
-	if (!(kbd_ll->flags & LLKHF_UP))
-	{
-		::PlaySoundW(L"D:/Project/GitHub/KeyBeep/Beep.wav", nullptr, SND_ASYNC | SND_FILENAME);
-	}
 }
 
 LRESULT KBHook::HookCallback(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(nCode);
-	UNREFERENCED_PARAMETER(wParam);
-	UNREFERENCED_PARAMETER(lParam);
+	const auto result = CallNextHookEx(nullptr, nCode, wParam, lParam);
 
 	const KBDLLHOOKSTRUCT* kbd_ll = reinterpret_cast<const KBDLLHOOKSTRUCT*>(lParam);
+
 	assert(kbd_ll != nullptr);
-
 	assert(INSTANCE != nullptr);
-	INSTANCE->OnKeyEvent(kbd_ll);
 
-	return CallNextHookEx(nullptr, nCode, wParam, lParam);
+	if (kbd_ll != nullptr && INSTANCE != nullptr)
+	{
+		INSTANCE->OnKeyEvent(*kbd_ll);
+	}
+	else
+	{
+		__assume(0);
+	}
+
+	return result;
 }

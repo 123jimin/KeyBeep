@@ -15,7 +15,7 @@ protected:
 	void Start();
 
 	void Main();
-	void OnKeyEvent(const KBDLLHOOKSTRUCT* kbd_ll);
+	void OnKeyEvent(const KBDLLHOOKSTRUCT& kbd_ll);
 
 	KeyBeep& mOwner;
 	std::thread mThread;

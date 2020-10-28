@@ -1,5 +1,6 @@
 #pragma once
 #include "KBWindow.h"
+#include "Beeper.h"
 
 class KBHook;
 
@@ -25,6 +26,8 @@ protected:
 	KBWindow mWindow;
 	KBHook& mHook;
 	HINSTANCE mInstance = nullptr;
+
+	Beeper mBeeper;
 
 	std::atomic<LastKeyPress> mLastKeyPress;
 };

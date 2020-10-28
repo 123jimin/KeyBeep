@@ -6,8 +6,9 @@ constexpr size_t MAX_LOADSTRING = 100;
 
 KeyBeep::KeyBeep(HINSTANCE hInstance)
     : mInstance(hInstance),
-    mHook(KBHook::Get(*this)), mWindow(*this)
+    mHook(KBHook::Get(*this)), mWindow(*this), mBeeper(*this)
 {
+
 }
 
 int KeyBeep::Start(int nCmdShow)
@@ -35,6 +36,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    if (AllocConsole())
+    {
+        freopen("CONOUT$", "w", stdout);
+    }
+
+    setlocale(LC_ALL, ".UTF-8");
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+
+    std::cout.setf(std::ios::unitbuf);
 
     KeyBeep keyBeep(hInstance);
     return keyBeep.Start(nCmdShow);

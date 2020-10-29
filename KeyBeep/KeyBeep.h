@@ -18,8 +18,14 @@ public:
 
 	inline HINSTANCE GetHInstance() const noexcept { return mInstance; }
 	
-	void SetLastKeyPress(LastKeyPress&& lastKeyPress) {
+	inline void SetLastKeyPress(LastKeyPress&& lastKeyPress)
+	{
 		mLastKeyPress.store(lastKeyPress, std::memory_order_relaxed);
+	}
+
+	inline LastKeyPress::time_point GetLastKeyPressTime() const
+	{
+		return mLastKeyPress.load(std::memory_order_relaxed).mTime;
 	}
 
 protected:

@@ -8,12 +8,16 @@ KeyBeep::KeyBeep(HINSTANCE hInstance)
     : mInstance(hInstance),
     mHook(KBHook::Get(*this)), mWindow(*this), mBeeper(*this)
 {
-
 }
 
 int KeyBeep::Start(int nCmdShow)
 {
     if (!mWindow.InitInstance(nCmdShow))
+    {
+        return FALSE;
+    }
+
+    if (!mBeeper.Start())
     {
         return FALSE;
     }

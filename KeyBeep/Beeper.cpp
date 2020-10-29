@@ -22,23 +22,22 @@ inline void SAFE_RELEASE(std::unique_ptr<T> t)
 
 static constexpr uint16_t GetVolume(const size_t frameInd)
 {
-	if (frameInd >= 500)
+	constexpr size_t len = 512;
+
+	if (frameInd >= len)
 	{
 		return 0;
 	}
 	else
 	{
-		return static_cast<uint16_t>(500 - frameInd);
+		return static_cast<uint16_t>((len - frameInd) * (len - frameInd) / len / 16);
 	}
 }
 
 void Beeper::GenerateBeep(const size_t startFrameInd, int16_t* data, const uint32_t frames, const uint32_t channels)
 {
-	const auto lastKeyPressTime = mOwner.GetLastKeyPressTime();
-	if (mLastKeyPressTime < lastKeyPressTime)
+	if (mTriggered.exchange(false, std::memory_order_relaxed))
 	{
-		mLastKeyPressTime = lastKeyPressTime;
-		mLastKeyPressDelay.store(std::chrono::steady_clock::now() - lastKeyPressTime, std::memory_order_relaxed);
 		mLastKeyPressInd = startFrameInd;
 	}
 
@@ -74,7 +73,7 @@ void Beeper::GenerateBeep(const size_t startFrameInd, int16_t* data, const uint3
 
 		const size_t currFrameInd = startFrameInd - mLastKeyPressInd + i + 5;
 		
-		int16_t sawtooth = (static_cast<int16_t>(currFrameInd % 11) - 5);
+		int16_t sawtooth = (static_cast<int16_t>(currFrameInd % 21) - 10);
 		sawtooth *= startVolume + static_cast<decltype(sawtooth)>((static_cast<int_fast32_t>(endVolume - startVolume) * i) / frames);
 
 		for (uint_fast32_t j = 0; j < channels; ++j)
@@ -115,10 +114,6 @@ Beeper::Device::~Device()
 
 void Beeper::Device::Main()
 {
-	std::wcout << L"The audio thread is running... ("
-		<< mMixFormat.Format.nSamplesPerSec << L"Hz sampling rate, " << mBufferFrameCount << L" samples = "
-		<< (mBufferFrameCount * 1000) / mMixFormat.Format.nSamplesPerSec << L"ms buffer size)" << std::endl;
-
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
 	const uint32_t numChannels = static_cast<uint32_t>(mMixFormat.Format.nChannels);
@@ -276,6 +271,13 @@ bool Beeper::Device::Start()
 	}
 
 	mThread = std::thread(&Beeper::Device::Main, this);
+
+	std::wstringstream stream;
+	stream << mMixFormat.Format.nSamplesPerSec << L"Hz sampling rate | "
+		<< mBufferFrameCount << L" samples = " << (mBufferFrameCount * 1000) / mMixFormat.Format.nSamplesPerSec << L"ms buffer size";
+
+	mOwner.mOwner.SetMessage(stream.str());
+
 	return true;
 }
 

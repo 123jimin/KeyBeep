@@ -12,12 +12,12 @@ KeyBeep::KeyBeep(HINSTANCE hInstance)
 
 int KeyBeep::Start(int nCmdShow)
 {
-    if (!mWindow.InitInstance(nCmdShow))
+    if (!mBeeper.Start())
     {
         return FALSE;
     }
 
-    if (!mBeeper.Start())
+    if (!mWindow.InitInstance(nCmdShow))
     {
         return FALSE;
     }
@@ -41,6 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    /*
     if (AllocConsole())
     {
         freopen("CONOUT$", "w", stdout);
@@ -51,6 +52,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     SetConsoleCP(CP_UTF8);
 
     std::cout.setf(std::ios::unitbuf);
+    */
 
     KeyBeep keyBeep(hInstance);
     return keyBeep.Start(nCmdShow);

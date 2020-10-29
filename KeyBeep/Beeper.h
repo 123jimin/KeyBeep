@@ -50,6 +50,7 @@ public:
 	~Beeper();
 
 	inline bool Start() { return mDevice != nullptr && mDevice->Start(); }
+	inline void Trigger() { mTriggered.store(true, std::memory_order_relaxed); }
 
 protected:
 	void GenerateBeep(const size_t startFrameInd, int16_t* data, const uint32_t frames, const uint32_t channels);
@@ -60,7 +61,6 @@ protected:
 	std::unique_ptr<Device> mDevice = nullptr;
 
 private:
-	time_point mLastKeyPressTime = time_point::min();
-	std::atomic<time_point::duration> mLastKeyPressDelay = time_point::duration::zero();
 	size_t mLastKeyPressInd = 0;
+	std::atomic<bool> mTriggered = false;
 };

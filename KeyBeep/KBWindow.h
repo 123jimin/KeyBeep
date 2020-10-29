@@ -13,6 +13,9 @@ public:
 	inline void SetTitle(const std::wstring& str) { mTitle = str; }
 	inline const std::wstring& GetTitle() const noexcept { return mTitle; }
 
+	inline void SetMsg(const std::wstring& str) { mMessage = str; }
+	inline const std::wstring& GetMsg() const noexcept { return mMessage; }
+
 protected:
 	void Render();
 	void RegisterClass();
@@ -24,6 +27,7 @@ protected:
 
 	std::wstring mTitle;
 	std::wstring mWindowClass;
+	std::wstring mMessage;
 
 private:
 	void LoadString(UINT uid, _Out_ std::wstring& out);

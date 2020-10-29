@@ -53,8 +53,7 @@ void KBHook::Main()
 void KBHook::OnKeyEvent(const KBDLLHOOKSTRUCT& kbd_ll)
 {
 	if (kbd_ll.flags & LLKHF_UP) return;
-
-	mOwner.SetLastKeyPress(KeyBeep::LastKeyPress{std::chrono::steady_clock::now()});
+	mOwner.Beep();
 }
 
 LRESULT KBHook::HookCallback(int nCode, WPARAM wParam, LPARAM lParam)

@@ -21,7 +21,7 @@ KBWindow::~KBWindow()
 bool KBWindow::InitInstance(int nCmdShow)
 {
     mWnd = ::CreateWindowW(mWindowClass.data(), mTitle.data(), WS_SYSMENU,
-        CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, nullptr, nullptr, mInstance, nullptr);
+        CW_USEDEFAULT, CW_USEDEFAULT, 450, 80, nullptr, nullptr, mInstance, this);
 
     if (!mWnd)
     {
@@ -70,13 +70,21 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 {
     switch (message)
     {
+    case WM_CREATE:
+    {
+        KBWindow* window = reinterpret_cast<KBWindow*>(reinterpret_cast<LPCREATESTRUCT>(lParam)->lpCreateParams);
+        SetWindowLongPtrW(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+        break;
+    }
     case WM_KEYDOWN:
         break;
     case WM_PAINT:
     {
+        KBWindow* window = reinterpret_cast<KBWindow *>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
+
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        TextOutW(hdc, 100, 100, L"Hello, world!", 13);
+        TextOutW(hdc, 25, 10, window->GetMsg().c_str(), static_cast<int>(window->GetMsg().size()));
         EndPaint(hWnd, &ps);
         break;
     }

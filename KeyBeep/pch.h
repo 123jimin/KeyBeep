@@ -9,6 +9,7 @@
 #include <iostream>
 #include <mutex>
 #include <string>
+#include <sstream>
 #include <thread>
 
 #define NOMINMAX
